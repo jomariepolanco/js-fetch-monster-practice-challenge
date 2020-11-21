@@ -1,16 +1,35 @@
 const monsterContainer = document.querySelector("#monster-container")
-// console.log(monsterContainer)
+const forwardButton = document.querySelector("#forward")
+const backButton = document.querySelector("#back")
 
-const fetchMonstersGet = () => {
-    return fetch('http://localhost:3000/monsters/?_limit=50')
+let page = 1 
+
+forwardButton.addEventListener("click", () => {
+    const monsterOl = event.target.previousElementSibling.previousElementSibling.children[page - 1]
+    page += 1 
+    fetchMonstersGet(page)
+    if (parseInt(monsterOl) === page) {
+        console.log(monsterOl)
+        console.log(page)
+        monsterOl.style.display = ""
+    } else {
+        console.log(page)
+        console.log(monsterOl)
+        monsterOl.style.display = "none"
+    }
+})
+ 
+const fetchMonstersGet = (page) => {
+    page = page 
+    return fetch(`http://localhost:3000/monsters/?_limit=50&_page=${page}`)
         .then(resp => resp.json())
         .then(monstersData => renderMonsters(monstersData))
 }
 
 const renderMonsters = (monsters) => {
     const ol = document.createElement("ol")
+    ol.dataset.id = page 
     monsterContainer.append(ol)
-    console.log(monsterContainer)
     monsters.forEach(monster => {
         const monsterLi = document.createElement("li")
         monsterLi.dataset.id = monster.id 
@@ -23,6 +42,6 @@ const renderMonsters = (monsters) => {
 }
 
 const initialize = () => {
-    fetchMonstersGet() 
+    fetchMonstersGet(1) 
 }
 initialize()
