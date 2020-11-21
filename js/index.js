@@ -4,14 +4,34 @@ const backButton = document.querySelector("#back")
 
 let page = 1 
 
-forwardButton.addEventListener("click", () => {
+forwardButton.addEventListener("click", (event) => {
     const monsterOl = event.target.previousElementSibling.previousElementSibling.children[page - 1]
     page += 1 
     fetchMonstersGet(page)
-    if (parseInt(monsterOl) === page) {
+    if (parseInt(monsterOl.dataset.id) === page) {
         console.log(monsterOl)
         console.log(page)
         monsterOl.style.display = ""
+    } else {
+        console.log(page)
+        console.log(monsterOl)
+        monsterOl.style.display = "none"
+    }
+})
+
+backButton.addEventListener("click", (event) => {
+    const monsterOls = Array.from(event.target.previousElementSibling.children)
+    const monsterOl = event.target.previousElementSibling.children[page - 2]
+    page -= 1 
+    if (parseInt(monsterOl.dataset.id) === page) {
+        console.log(monsterOl)
+        console.log(page)
+        monsterOl.style.display = ""
+        monsterOls.forEach(ol => {
+            if (ol.dataset.id !== monsterOl.dataset.id) {
+                ol.style.display = "none"
+            }
+        })
     } else {
         console.log(page)
         console.log(monsterOl)
